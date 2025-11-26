@@ -3,11 +3,7 @@
 
 # 包含必要文件
 !backend/
-!frontend/src/
-!frontend/package.json
-!frontend/package-lock.json
-!frontend/index.html
-!frontend/vite.config.js
+!frontend/**
 !requirements.txt
 !docker-entrypoint.sh
 !nginx.conf
