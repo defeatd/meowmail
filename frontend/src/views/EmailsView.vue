@@ -46,14 +46,15 @@
           border
           highlight-current-row
           class="email-table"
+          :fit="true"
         >
           <el-table-column
             type="selection"
             width="55"
             :selectable="row => row"
           />
-          <el-table-column prop="email" label="邮箱地址" width="220" />
-          <el-table-column prop="mail_type" label="邮箱类型" width="120">
+          <el-table-column prop="email" label="邮箱地址" min-width="200" show-overflow-tooltip />
+          <el-table-column prop="mail_type" label="邮箱类型" min-width="100">
             <template #default="scope">
               <el-tag
                 :type="getMailTypeColor(scope.row.mail_type || 'outlook')"
@@ -64,7 +65,7 @@
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="password" label="密码" width="150">
+          <el-table-column prop="password" label="密码" min-width="120">
             <template #default="scope">
               <div class="password-field flex-between">
                 <span class="password-text">{{ scope.row.showPassword ? scope.row.password : '******' }}</span>
@@ -79,7 +80,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="配置信息" width="200">
+          <el-table-column label="配置信息" min-width="140">
             <template #default="scope">
               <template v-if="scope.row.mail_type === 'imap'">
                 <div class="server-info">
@@ -108,12 +109,12 @@
               </template>
             </template>
           </el-table-column>
-          <el-table-column prop="last_check_time" label="最后检查时间" width="180">
+          <el-table-column prop="last_check_time" label="最后检查时间" min-width="150">
             <template #default="scope">
               <span>{{ formatDate(scope.row.last_check_time) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" fixed="right" width="360">
+          <el-table-column label="操作" fixed="right" min-width="200">
             <template #default="scope">
               <div class="action-buttons flex gap-sm">
                 <el-button
@@ -1224,7 +1225,7 @@ onMounted(() => {
   flex-direction: column;
   gap: 20px;
   padding: 20px;
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   width: 100%;
 }
@@ -1297,7 +1298,8 @@ onMounted(() => {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  justify-content: space-around;
+  justify-content: flex-start;
+  max-width: 240px;
 }
 
 .action-btn {
