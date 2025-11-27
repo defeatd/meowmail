@@ -31,12 +31,9 @@ jobs:
         with:
           images: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/firemail
-          # 仅在 tag 时生成 semver 标签；自动构建不生成 latest/branch/sha
           tags: |
             type=ref,event=tag
             type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
       
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
