@@ -30,7 +30,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ secrets.DOCKER_HUB_USERNAME }}/FireMail
+            ${{ secrets.DOCKER_HUB_USERNAME }}/firemail
           tags: |
             type=ref,event=branch
             type=ref,event=tag
@@ -66,8 +66,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           provenance: false
-          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/FireMail:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/FireMail:buildcache,mode=max
+          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/firemail:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/firemail:buildcache,mode=max
           build-args: |
             BUILD_DATE=${{ github.event.head_commit.timestamp }}
             VCS_REF=${{ github.sha }}
