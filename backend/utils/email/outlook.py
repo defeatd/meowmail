@@ -11,6 +11,7 @@ from .common import (
     decode_mime_words,
     normalize_check_time,
     format_date_for_imap_search,
+    parse_email_message,
 )
 from .logger import logger
 
@@ -106,30 +107,9 @@ class OutlookMailHandler:
                     sender = decode_mime_words(msg.get('From', ''))
                     received_time = email.utils.parsedate_to_datetime(msg.get('Date', ''))
 
-                    # 获取邮件内容
-                    content = ""
-                    if msg.is_multipart():
-                        for part in msg.walk():
-                            content_type = part.get_content_type()
-                            if content_type in ['text/plain', 'text/html']:
-                                try:
-                                    part_content = part.get_payload(decode=True).decode()
-                                    content += part_content
-                                except:
-                                    pass
-                    else:
-                        try:
-                            content = msg.get_payload(decode=True).decode()
-                        except:
-                            content = str(msg.get_payload())
-
-                    mail_list.append({
-                        'subject': subject,
-                        'sender': sender,
-                        'received_time': received_time,
-                        'content': content,
-                        'folder': folder
-                    })
+                    record = parse_email_message(msg, folder)
+                    if record:
+                        mail_list.append(record)
                 except Exception as e:
                     logger.warning(f"解析Outlook邮件失败: {e}")
                     continue
@@ -279,28 +259,10 @@ class OutlookMailHandler:
                             logger.info(f"跳过重复邮件: {subject}")
                             continue
 
-                        # 获取邮件内容
-                        content = ""
-                        if msg.is_multipart():
-                            for part in msg.walk():
-                                content_type = part.get_content_type()
-                                if content_type == 'text/plain' or content_type == 'text/html':
-                                    try:
-                                        part_content = part.get_payload(decode=True).decode()
-                                        content += part_content
-                                    except:
-                                        pass
-                        else:
-                            content = msg.get_payload(decode=True).decode()
-
-                        # 添加到结果列表
-                        mail_records.append({
-                            'subject': subject,
-                            'sender': sender,
-                            'received_time': received_time,
-                            'content': content,
-                            'mail_key': mail_key  # 添加唯一标识，用于后续去重
-                        })
+                        record = parse_email_message(msg, 'inbox')
+                        if record:
+                            record['mail_key'] = mail_key
+                            mail_records.append(record)
 
                     except Exception as e:
                         logger.error(f"处理邮件ID {mail_id} 时出错: {str(e)}")
