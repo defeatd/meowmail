@@ -1,5 +1,5 @@
 # --- Frontend Builder Stage ---
-FROM node:22-alpine AS frontend-builder
+FROM --platform=$BUILDPLATFORM node:22-alpine AS frontend-builder
 
 # Copy frontend files
 COPY frontend /app/frontend
@@ -7,12 +7,11 @@ COPY frontend /app/frontend
 # Build frontend
 WORKDIR /app/frontend
 RUN corepack enable pnpm && \
-    pnpm install && \
-    pnpm install dayjs && \
+    pnpm install --frozen-lockfile && \
     pnpm build
 
 # --- Python Dependencies Stage ---
-FROM python:3.10.17-slim-bullseye AS python-deps
+FROM --platform=$BUILDPLATFORM python:3.10.17-slim-bullseye AS python-deps
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
